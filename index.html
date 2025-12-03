@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carryvala | Tiffin Pickup & Delivery Service</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for custom colors and font -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Changed primary color to a strong red
+                        'carry-red': '#dc2626', // Tailwind red-600
+                        'carry-dark': '#1f2937',
+                        'carry-light': '#fef2f2', // Very light red background
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    keyframes: {
+                        // Define custom keyframes for pulse and move effects
+                        pulse: {
+                            '0%, 100%': { transform: 'scale(1)', opacity: 1 },
+                            '50%': { transform: 'scale(1.05)', opacity: 0.8 },
+                        },
+                        move: {
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '50%': { transform: 'translateX(5px)' },
+                        }
+                    },
+                    animation: {
+                        // Applied pulse to WhatsApp button only
+                        'slow-pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'small-move': 'move 1.5s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for the theme and animations */
+        .shadow-custom {
+            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.2), 0 2px 4px -1px rgba(220, 38, 38, 0.1);
+        }
+
+        .icon-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 9999px;
+            /* full rounded */
+        }
+
+        /* Removed slow-pulse from #search-button to avoid conflicting visual focus */
+    </style>
+    <!--Tracking styles-->
+    <style>
+        .card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .step {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 15px;
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #d1d5db;
+        }
+
+        .active::before {
+            background: #16a34a;
+            /* green */
+        }
+
+        .line {
+            position: absolute;
+            left: 16px;
+            top: 20px;
+            width: 2px;
+            height: 100%;
+            background: #d1d5db;
+        }
+    </style>
+    /* Step Icons */
+    <style>
+        .step-icon.completed {
+            background-color: #16a34a;
+            /* green */
+            border-color: #16a34a;
+            color: white;
+            transition: all 0.5s;
+        }
+
+        /* Step Text Active */
+        .step-text.active {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        /* Smooth progress bar */
+        #progressBar {
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!--Track -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Mobile Menu Button -->
+</head>
+
+<body class="font-sans bg-carry-light text-carry-dark">
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-white shadow-lg">
+        <button id="mobileMenuBtn" class="md:hidden text-carry-dark p-2">
+            ☰
+        </button>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-18">
+                <!-- Logo -->
+                <div class="flex items-center py-2 space-x-2">
+                    <!-- Logo Image -->
+                    <img src="Logo.jpg" alt="Carryvala Logo" class="w-18 h-16 object-contain">
+                    <!-- Logo Text -->
+                    <span class="text-3xl font-extrabold text-carry-red">
+                        C<span class="text-carry-dark">arryvala</span>
+                    </span>
+                </div>
+                <!-- Navigation Links (Hidden on small screens) -->
+                <nav id="navMenu"
+                    class="hidden md:flex md:space-x-8 flex-col md:flex-row absolute md:static top-full left-0 w-full md:w-auto bg-white md:bg-transparent p-4 md:p-0 text-sm font-semibold shadow md:shadow-none z-50">
+                    <a href="#" class="hover:text-carry-red" onclick="showPage('homePage')">Home</a>
+                    <a href="#" class="hover:text-carry-red" onclick="showPage('trackingPage')">Tracking</a>
+                    <a href="#" class="hover:text-carry-red" onclick="showPage('shippingPage')">Shipping</a>
+                    <a href="#" class="hover:text-carry-red" onclick="showPage('aboutPage')">About Us</a>
+                    <a href="#" class="hover:text-carry-red" onclick="showPage('contactPage')">Contact Us</a>
+                </nav>
+                <!-- Auth/Cart Icons -->
+                <div class="flex items-center space-x-4">
+                    <!-- User Icon (Login) -->
+                    <a href="#" onclick="showPage('loginPage')"
+                        class="text-carry-dark hover:text-carry-red transition duration-150 p-2 rounded-full hover:bg-carry-red/10">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z">
+                            </path>
+                        </svg>
+                    </a>
+                    <!-- Register Button -->
+                    <a href="#" onclick="showPage('registerPage')"
+                        class="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-pink-700 transition duration-150 flex items-center space-x-2 shadow-md">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+                        </svg>
+                        <span id="cart-count">Register</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <div id="homePage">
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12">
+            <!-- Hero Section - Focus on Logistics -->
+            <section
+                class="text-center py-16 bg-white rounded-xl shadow-2xl shadow-carry-purple/20 mb-16 border-b-4 border-red-600">
+                <h1 class="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-carry-dark mb-4">
+                    <span class="text-red-600">Carryvala: Your Tiffin,</span><br>
+                    Delivered On-Time, Every Time.
+                </h1>
+                <div class="max-w-3xl mx-auto mb-8">
+                    <p class="text-gray-700 text-base sm:text-lg leading-relaxed tracking-wide">
+                        <span class="font-semibold text-carry-dark">
+                            Reliable pickup
+                        </span> from your home kitchen and
+                        <span class="font-semibold text-carry-dark">
+                            secure, guaranteed delivery
+                        </span>
+                        to schools, colleges, and office locations —
+                        <span class="text-carry-red font-semibold">
+                            always before your lunch break begins.
+                        </span>
+                    </p>
+                </div>
+                <!-- Location Search Bar - Focused on P&D -->
+                <div class="bg-white p-3 rounded-full shadow-xl max-w-4xl mx-auto flex flex-col md:flex-row gap-4">
+
+                    <div class="flex-1 flex bg-gray-100 rounded-full p-2 items-center">
+                        <!-- Pickup Location -->
+                        <div class="flex items-center space-x-2 px-3 border-r border-gray-300 w-1/2">
+                            <svg class="w-5 h-5 text-carry-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                </path>
+                            </svg>
+                            <input type="text" id="pickup-location" placeholder="Your Home/Pickup Address"
+                                class="flex-1 bg-transparent px-2 text-gray-700 focus:outline-none placeholder-gray-500 text-sm" />
+                        </div>
+                        <!-- Drop-off Destination -->
+                        <div class="flex items-center space-x-2 px-3 w-1/2">
+                            <svg class="w-5 h-5 text-carry-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <select id="delivery-type"
+                                class="bg-transparent focus:outline-none text-sm font-semibold text-gray-700">
+                                <option value="office">Office/Business Park</option>
+                                <option value="school">School/Institution</option>
+                                <option value="college">College/University</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Search Button -->
+                    <a href="#" onclick="showPage('schedulePage')">
+                        <button
+                            class="w-full md:w-auto bg-carry-red text-white font-bold py-3 px-8 rounded-full shadow-custom hover:bg-red-700 transition duration-300 transform hover:scale-105 active:scale-95">
+                            Book Delivery
+                        </button>
+                    </a>
+                </div>
+                <p id="search-message" class="mt-4 text-base text-gray-600 min-h-[1.5rem]"></p>
+            </section>
+            <!-- How It Works Section - Pure Logistics Focus -->
+            <section class="py-12">
+                <h2 class="text-3xl font-extrabold text-center mb-12 text-carry-dark">How Carryvala Delivers Your Lunch
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Step 1: Schedule -->
+                    <div
+                        class="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2 border-t-4 border-carry-red">
+                        <div class="icon-box bg-carry-red/10 text-carry-red mb-4 animate-small-move">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-carry-dark">1. Schedule Pickup & Drop-off</h3>
+                        <p class="text-gray-600">Enter your home pickup address and the exact institution
+                            (school/office/college) where your meal needs to be delivered.</p>
+                    </div>
+                    <!-- Step 2: Pickup -->
+                    <div
+                        class="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2 border-t-4 border-carry-red">
+                        <div class="icon-box bg-carry-red/10 text-carry-red mb-4 animate-small-move"
+                            style="animation-delay: 0.1s;">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.24c1.29 1.144 2.118 2.58 2.118 4.095 0 3.328-4.8 6.007-9.333 6.007s-9.333-2.679-9.333-6.007c0-1.515.828-2.951 2.118-4.095m14.474-1.472C18.66 3.613 15.42 2 12 2S5.34 3.613 3.908 6.288M12 2v2">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-carry-dark">2. Swift Home Pickup</h3>
+                        <p class="text-gray-600">Our dedicated delivery partner arrives at your home address, verifies
+                            the
+                            pre-packed meal, and securely picks it up.</p>
+                    </div>
+                    <!-- Step 3: Delivery -->
+                    <div
+                        class="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2 border-t-4 border-carry-red">
+                        <div class="icon-box bg-carry-red/10 text-carry-red mb-4 animate-small-move"
+                            style="animation-delay: 0.2s;">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20v-2m0 2H7m10 0h2m-4.515-6.611A1 1 0 0012 11h2m-6-1h1m4 0h1m-1.49-3.951A1 1 0 0014 4H9a1 1 0 00-.99 1.049L7.5 14h9L15 4h-2m-3 0h-1">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-carry-dark">3. Guaranteed Institution Drop-off</h3>
+                        <p class="text-gray-600">We ensure the meal is delivered directly to the designated drop-off
+                            point
+                            (lobby/reception) well before the scheduled lunch time.</p>
+                    </div>
+                </div>
+            </section>
+            <!-- Service Highlights Section -->
+            <section class="py-16 bg-white rounded-xl shadow-xl my-16 p-8 md:p-12">
+                <h2 class="text-3xl font-extrabold text-center mb-10 text-carry-dark">Why Trust Carryvala?</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                    <!-- Highlight 1 -->
+                    <div class="group p-4 rounded-lg hover:bg-carry-red/10 transition duration-300">
+                        <div
+                            class="icon-box mx-auto bg-carry-red text-white mb-3 group-hover:bg-red-700 transition duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-lg text-carry-dark">Time Guaranteed</h4>
+                        <p class="text-sm text-gray-500">We guarantee delivery within your institution's specific window
+                            or
+                            your money back.</p>
+                    </div>
+                    <!-- Highlight 2 -->
+                    <div class="group p-4 rounded-lg hover:bg-carry-red/10 transition duration-300">
+                        <div
+                            class="icon-box mx-auto bg-carry-red text-white mb-3 group-hover:bg-red-700 transition duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.24c1.29 1.144 2.118 2.58 2.118 4.095 0 3.328-4.8 6.007-9.333 6.007s-9.333-2.679-9.333-6.007c0-1.515.828-2.951 2.118-4.095m14.474-1.472C18.66 3.613 15.42 2 12 2S5.34 3.613 3.908 6.288M12 2v2">
+                                </path>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-lg text-carry-dark">Live Tracking</h4>
+                        <p class="text-sm text-gray-500">Track your tiffin from the moment of pickup to the final
+                            drop-off
+                            location.</p>
+                    </div>
+                    <!-- Highlight 3 -->
+                    <div class="group p-4 rounded-lg hover:bg-carry-red/10 transition duration-300">
+                        <div
+                            class="icon-box mx-auto bg-carry-red text-white mb-3 group-hover:bg-red-700 transition duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 11c0 1.657-3.5 3-3.5 3s3.5 1.343 3.5 3m0-6v6m-3-6a3 3 0 116 0m0 0h4m-4 0a3 3 0 10-6 0m6 0h4">
+                                </path>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-lg text-carry-dark">Dedicated Drivers</h4>
+                        <p class="text-sm text-gray-500">Trained personnel specializing in secure and timely
+                            institutional
+                            drop-offs.</p>
+                    </div>
+                    <!-- Highlight 4 -->
+                    <div class="group p-4 rounded-lg hover:bg-carry-red/10 transition duration-300">
+                        <div
+                            class="icon-box mx-auto bg-carry-red text-white mb-3 group-hover:bg-red-700 transition duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-lg text-carry-dark">Secure Packaging</h4>
+                        <p class="text-sm text-gray-500">Instructions followed for handling delicate or
+                            temperature-sensitive packages.</p>
+                    </div>
+                </div>
+            </section>
+            <!-- CTA Section: Join as a Rider -->
+            <section class="bg-carry-dark text-white p-12 rounded-xl my-16 border-l-8 border-carry-red">
+                <div class="flex flex-col md:flex-row items-center justify-between max-w-5xl mx-auto">
+                    <div class="md:w-3/4 text-center md:text-left mb-6 md:mb-0">
+                        <h3 class="text-3xl font-extrabold mb-2">Drive & Deliver with Carryvala</h3>
+                        <p class="text-gray-300">Earn great income with flexible hours delivering happiness across the
+                            city's top institutions.</p>
+                    </div>
+                    <button onclick="openRiderModal()"
+                        class="bg-carry-red text-white font-bold py-3 px-6 rounded-full shadow-custom hover:bg-red-700 transition duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap">
+                        Become a Rider
+                    </button>
+                </div>
+            </section>
+    </div>
+    </main>
+    </div>
+    <!-- Register Page -->
+    <div id="registerPage"
+        class="hidden min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-50 to-red-50 pt-28">
+        <div class="p-8 rounded-xl shadow-xl w-full max-w-md bg-white">
+            <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Create Account</h2>
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <label for="name" class="block font-medium mb-1 text-gray-700">Full Name</label>
+                    <input type="text" id="name" class="w-full p-2 border rounded focus:ring-2 focus:ring-red-500"
+                        placeholder="John Doe" required>
+                </div>
+                <div>
+                    <label for="email" class="block font-medium mb-1 text-gray-700">Email</label>
+                    <input type="email" id="email" class="w-full p-2 border rounded focus:ring-2 focus:ring-red-500"
+                        placeholder="example@mail.com" required>
+                </div>
+                <div>
+                    <label for="phone" class="block font-medium mb-1 text-gray-700">Phone Number</label>
+                    <input type="text" id="phone" class="w-full p-2 border rounded focus:ring-2 focus:ring-red-500"
+                        placeholder="1234567890" required>
+                </div>
+                <div>
+                    <label for="password" class="block font-medium mb-1 text-gray-700">Password</label>
+                    <input type="password" id="password"
+                        class="w-full p-2 border rounded focus:ring-2 focus:ring-red-500" placeholder="Min 6 characters"
+                        required>
+                </div>
+                <div>
+                    <label for="confirmPassword" class="block font-medium mb-1 text-gray-700">Confirm Password</label>
+                    <input type="password" id="confirmPassword"
+                        class="w-full p-2 border rounded focus:ring-2 focus:ring-red-500"
+                        placeholder="Re-enter password" required>
+                </div>
+                <p id="registerError" class="text-red-500 hidden"></p>
+                <button id="registerBtn"
+                    class="w-full bg-red-600 text-white p-2 rounded font-bold hover:bg-red-700 transition">Register</button>
+            </form>
+            <p class="text-center mt-4 text-sm text-gray-700">
+                Already have an account?
+                <a href="#" onclick="showPage('loginPage')" class="text-red-600 font-semibold hover:underline">Login</a>
+            </p>
+        </div>
+    </div>
+    <!--===================Schedule Page=============================-->
+    <div id="schedulePage" class="hidden pt-28 pb-12 flex items-center justify-center">
+        <div class="glass rounded-xl shadow-xl w-full max-w-md sm:max-w-lg lg:max-w-2xl mx-auto overflow-hidden">
+            <<section class="p-4 sm:p-6 lg:p-10">
+                <header class="mb-6 text-center">
+                    <h1 class="text-2xl lg:text-3xl font-extrabold text-red-600">Schedule Pickup & Delivery</h1>
+                    <p class="text-sm text-gray-600 mt-1">Provide detailed pickup address and contact so our driver
+                        finds you easily.</p>
+                </header>
+
+                <form id="scheduleForm" class="space-y-4">
+                    <!-- Sender Name -->
+                    <h6 class="text-xl lg:text-xl font-bold text-red-600">Enter your Pickup Details</h6>
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Sender name</label>
+                        <input id="name" type="text" required placeholder="Full name"
+                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                    </div>
+                    <!-- Mobile -->
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Mobile number</label>
+                        <div class="mt-1 relative">
+                            <span class="absolute left-3 top-3 text-gray-500">+91</span>
+                            <input id="mobile" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10"
+                                required placeholder="9876543210"
+                                class="pl-14 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Address Fields -->
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Flat / House No.</label>
+                        <input id="flat" type="text" required placeholder="Flat / House No."
+                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Building / Street</label>
+                        <input id="street" type="text" required placeholder="Building name, street"
+                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-sm font-semibold text-gray-700">City</label>
+                            <input id="city" type="text" required placeholder="Bangalore"
+                               class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-gray-700">Pincode</label>
+                            <input id="pincode" type="text" inputmode="numeric" maxlength="6" required
+                                placeholder="500001"
+                                class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Landmark (optional)</label>
+                        <input id="landmark" type="text" placeholder="Near Paradise Circle"
+                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                    </div>
+
+                    <!-- Delivery -->
+                    <h6 class="text-xl lg:text-xl font-bold text-red-600">Enter your Delivery Information</h6>
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Building / Street</label>
+                        <input id="street" type="text" required placeholder="Building name, street"
+                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-sm font-semibold text-gray-700">City</label>
+                            <input id="city" type="text" required placeholder="Bangalore"
+                                class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-gray-700">Pincode</label>
+                            <input id="pincode" type="text" inputmode="numeric" maxlength="6" required
+                                placeholder="500001"
+                                class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
+                        </div>
+                    </div>
+                    <div>
+                        <!-- Pickup Date & Time -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-sm font-semibold text-gray-700">Pickup date</label>
+                                <input id="date" type="date" required
+                                    class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                            </div>
+                            <div>
+                                <label class="text-sm font-semibold text-gray-700">Pickup time</label>
+                                <select id="timeSelect" required class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                                    <option value="">Select pickup time</option>
+                                    <option>07:30 AM</option>
+                                    <option>08:00 AM</option>
+                                    <option>08:30 AM</option>
+                                    <option>09:00 AM</option>
+                                    <option>09:30 AM</option>
+                                    <option>10:00 AM</option>
+                                    <option>11:00 AM</option>
+                                    <option>12:00 PM</option>
+                                    <option>01:00 PM</option>
+                                    <option>02:00 PM</option>
+                                    <option>03:00 PM</option>
+                                    <option>05:00 PM</option>
+                                    <option>06:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Person -->
+                        <div>
+                            <label class="text-sm font-semibold text-gray-700">Delivery Person Name</label>
+                            <input id="delPerson" type="text" required placeholder="Driver Name"
+                               class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                        </div>
+                        <!-- Phone field logic -->
+                        <div id="phoneDiv">
+                            <label class="text-sm font-semibold text-gray-700">Phone Number</label>
+                            <input id="officePhone" type="text" maxlength="10" inputmode="numeric"
+                               class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                        </div>
+                        <!-- Weight -->
+                        <div>
+                            <label class="text-sm font-semibold text-gray-700">Package weight</label>
+                            <select id="weightSelect" required
+                                class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500">
+                                <option value="">Choose weight</option>
+                                <option value="50">Up to 5 kg — ₹50</option>
+                                <option value="90">5–10 kg — ₹90</option>
+                                <option value="130">10–20 kg — ₹130</option>
+                                <option value="180">20+ kg — ₹180</option>
+                            </select>
+                        </div>
+                        <!-- Price -->
+                        <div class="mt-3 bg-gray-50 border rounded-lg p-3 text-sm text-gray-700">
+                            <div class="flex justify-between"><span>Base fare</span><span>₹<span
+                                        id="baseFare">0</span></span></div>
+                            <div class="flex justify-between"><span>GST (5%)</span><span>₹<span id="gst">0</span></span>
+                            </div>
+                            <div class="flex justify-between font-semibold text-lg mt-2"><span>Total</span><span>₹<span
+                                        id="total">0</span></span></div>
+                        </div>
+                        <!-- Payment -->
+                        <div class="mt-4">
+                            <label class="text-sm font-semibold text-gray-700 block mb-2">Payment method</label>
+                            <div id="paymentOptions" class="flex gap-3">
+                                <button type="button" data-pay="upi"
+                                    class="payOption flex-1 p-3 border rounded-lg text-left hover:shadow focus:outline-none">
+                                    <div class="flex items-center gap-3">
+                                        <div class="icon-circle bg-emerald-100 text-emerald-700">UPI</div>
+                                        <div>
+                                            <div class="font-semibold">UPI</div>
+                                            <div class="text-xs text-gray-500">Fast & contactless</div>
+                                        </div>
+                                    </div>
+                                </button>
+                                <button type="button" data-pay="cod"
+                                    class="payOption flex-1 p-3 border rounded-lg text-left hover:shadow focus:outline-none">
+                                    <div class="flex items-center gap-3">
+                                        <div class="icon-circle bg-slate-100 text-slate-700">COD</div>
+                                        <div>
+                                            <div class="font-semibold">Cash on Delivery</div>
+                                            <div class="text-xs text-gray-500">Pay the rider</div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Submit -->
+                        <div class="mt-6">
+                            <button type="submit" id="submitBtn" disabled
+                                class="w-full bg-red-600 text-white py-3 rounded-full font-semibold disabled:opacity-50">
+                                Schedule & Pay
+                            </button>
+                        </div>
+                </form>
+            </section>
+        </div>
+        </main>
+        <!-- Payment Modal -->
+        <div id="qrModal" class="fixed inset-0 hidden z-50 flex items-center justify-center">
+            <div class="absolute inset-0 bg-black/60"></div>
+            <div id="qrContent"
+                class="relative z-10 w-full max-w-sm p-6 bg-white rounded-xl shadow-xl text-center transform scale-90 opacity-0">
+                <h3 class="font-semibold text-lg text-red-600 mb-3">Scan to pay (Demo)</h3>
+                <img id="qrImg"
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=carryvala@upi&pn=Carryvala"
+                    class="mx-auto rounded-md" alt="UPI QR">
+                <p class="text-sm text-gray-600 mt-3">After completing the payment, click <strong>I've paid</strong> to
+                    confirm.</p>
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                    <button id="paidBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">I've paid</button>
+                    <button id="cancelQr" class="px-4 py-2 border rounded-lg">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <!-- Success Modal -->
+        <div id="successModal" class="fixed inset-0 hidden z-50 flex items-center justify-center">
+            <div class="absolute inset-0 bg-black/60"></div>
+            <div id="successContent"
+                class="relative z-10 w-full max-w-sm p-6 bg-white rounded-xl shadow-xl text-center transform scale-90 opacity-0">
+                <div class="text-3xl text-emerald-600 mb-3">✅</div>
+                <h4 class="text-lg font-semibold">Pickup Scheduled Successfully!</h4>
+                <p class="text-sm text-gray-600 mt-2">
+                    Thank you for scheduling with Carryvala. Our delivery partner has been notified and will arrive at
+                    the scheduled time. You will be redirected to the homepage shortly.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== LOGIN PAGE ===================== -->
+    <div id="loginPage"
+        class="hidden min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50 pt-20">
+
+        <div
+            class="w-full max-w-5xl grid md:grid-cols-2 rounded-3xl shadow-2xl overflow-hidden bg-white animate-fadein">
+
+            <!-- IMAGE -->
+            <div class="hidden md:flex items-center justify-center bg-white p-10">
+                <img src="Logo.jpg" class="w-[420px] drop-shadow-xl">
+            </div>
+
+            <!-- LOGIN CARD -->
+            <div class="flex items-center justify-center px-10 py-14 md:-ml-1 bg-blue-100">
+
+                <div class="w-full max-w-sm text-center">
+
+                    <!-- AVATAR -->
+                    <div class="mx-auto mb-5 w-16 h-16 rounded-full bg-blue-500
+                            flex items-center justify-center shadow-lg">
+                        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-width="2" d="M12 12a4 4 0 100-8 4 4 0 000 8z
+                                 M4 20a8 8 0 0116 0" />
+                        </svg>
+                    </div>
+
+                    <h2 class="text-3xl font-bold mb-1">Welcome Back</h2>
+                    <p class="text-gray-500 mb-7">Login to continue</p>
+
+                    <!-- FORM -->
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+
+                        <!-- EMAIL -->
+                        <input id="loginEmail" type="email" placeholder="Email Address" required class="w-full px-4 py-3 border rounded-xl focus:ring-2
+                                  focus:ring-blue-500 outline-none">
+
+                        <!-- PASSWORD -->
+                        <div class="relative">
+                            <input id="loginPassword" type="password" placeholder="Password" required minlength="6"
+                                class="w-full px-4 py-3 border rounded-xl focus:ring-2
+                                      focus:ring-blue-500 outline-none pr-11">
+
+                            <!-- TOGGLE BUTTON -->
+                            <button type="button" onclick="togglePassword()"
+                                class="absolute right-3 top-3.5 text-gray-500 hover:text-blue-600">
+                                👁
+                            </button>
+                        </div>
+
+                        <!-- ERROR TEXT -->
+                        <p id="loginError" class="hidden text-red-500 text-sm font-medium">
+                            Invalid login details
+                        </p>
+
+                        <!-- BUTTON -->
+                        <button id="loginBtn" class="w-full mt-3 py-3 rounded-xl font-semibold text-white
+                                   bg-gradient-to-r from-blue-500 to-indigo-500
+                                   hover:scale-[1.02] transition">
+                            Login
+                        </button>
+
+                    </form>
+
+                    <!-- LINKS -->
+                    <div class="flex justify-between mt-5 text-sm">
+                        <a href="#" class="text-blue-500 hover:underline">
+                            Forgot password?
+                        </a>
+                        <a href="#" class="text-blue-500 hover:underline">
+                            Create account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ===================== LOGIN SCRIPT ===================== -->
+    <script>
+
+        function handleLogin(e) {
+            e.preventDefault();
+
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value.trim();
+            const error = document.getElementById("loginError");
+            const btn = document.getElementById("loginBtn");
+
+            error.classList.add("hidden");
+
+            if (!email.includes("@")) {
+                error.innerText = "Enter a valid email address";
+                error.classList.remove("hidden");
+                return;
+            }
+
+            if (password.length < 6) {
+                error.innerText = "Password must be at least 6 characters";
+                error.classList.remove("hidden");
+                return;
+            }
+
+            // Fake success (no API / no storage)
+            btn.innerText = "Logging in...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerText = "✅ Logged in";
+                btn.classList.remove("from-blue-500", "to-indigo-500");
+                btn.classList.add("bg-green-500");
+            }, 1200);
+            // after successful validation
+            localStorage.setItem("isLoggedIn", "true");
+            window.location.href = "";
+
+        }
+
+        // PASSWORD SHOW / HIDE
+        function togglePassword() {
+            const input = document.getElementById("loginPassword");
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
+    </script>
+
+    <!-- ===================== FADE ANIMATION ===================== -->
+    <style>
+        @keyframes fadein {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadein {
+            animation: fadein 0.6s ease-out;
+        }
+    </style>
+    <!-- ===================== TRACKING PAGE ===================== -->
+    <div id="trackingPage" class="hidden flex justify-center items-center min-h-screen bg-gray-50 relative">
+
+        <!-- Background overlay -->
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1602524201352-12ff33ef9fc3?auto=format&fit=crop&w=1950&q=80')] 
+              bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-white/70 backdrop-blur-sm"></div>
+
+        <!-- Card -->
+        <div class="relative z-10 w-full max-w-md p-8 rounded-2xl shadow-2xl bg-white">
+            <h2 class="text-3xl font-extrabold text-center text-carry-red mb-6">📦 Track Your Delivery</h2>
+
+            <!-- Input -->
+            <div class="flex items-center border rounded-lg overflow-hidden mb-4">
+                <span class="px-3 text-carry-red">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    </svg>
+                </span>
+                <input id="trackId" type="tel" maxlength="10" inputmode="numeric"
+                    placeholder="Enter 10-digit mobile number" class="flex-1 p-3 focus:outline-none text-gray-700" />
+            </div>
+
+            <!-- Button -->
+            <button onclick="trackOrder()"
+                class="w-full bg-carry-red hover:bg-red-700 text-white py-3 rounded-lg font-semibold transition duration-300">
+                Track Pickup
+            </button>
+
+            <!-- Result -->
+
+            <div id="resultBox" class="hidden mt-8">
+                <h3 class="text-xl font-bold mb-6 text-center text-carry-dark">Order Status</h3>
+
+                <!-- Progress Bar -->
+                <div class="flex justify-between items-center mb-6">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col items-center">
+                        <div
+                            class="w-10 h-10 rounded-full border-2 border-carry-red flex items-center justify-center text-carry-red">
+                            1</div>
+                        <span class="mt-2 text-sm">Pickup Confirmed</span>
+                    </div>
+
+                    <!-- Progress Line -->
+                    <div class="flex-1 h-1 bg-gray-300 mx-2">
+                        <div id="progressBar" class="h-1 bg-carry-red w-0 transition-all duration-500"></div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex flex-col items-center">
+                        <div
+                            class="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-400">
+                            2</div>
+                        <span class="mt-2 text-sm">Delivered</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ================= ABOUT PAGE ================= -->
+    <div id="aboutPage" class="hidden bg-carry-light min-h-screen pt-28 pb-16">
+
+        <section class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-10 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-carry-red mb-4">
+                        Who We Are
+                    </h2>
+                    <p class="mb-4">
+                        Carryvala is a reliable pickup and delivery service created to make
+                        daily food transportation simple, safe, and stress-free.
+                    </p>
+                    <p class="mb-4">
+                        We support working professionals, students, and home chefs by
+                        making sure meals reach fresh and on time.
+                    </p>
+                    <p>
+                        What started as a local lunchbox service has grown into a trusted food delivery brand.
+                    </p>
+                </div>
+                <div class="flex justify-center">
+                    <img src="Logo.jpg" alt="Carryvala Delivery"
+                        class="w-[420px] lg:w-[480px] h-auto max-w-full object-contain">
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--==================== CONTACT DETAILS======================= -->
+    <div id="contactPage" class="hidden">
+
+        <section class="relative h-[250px]">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1600&auto=format&fit=crop"
+                class="absolute inset-0 w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-black/40 flex items-center justify-center pt-10">
+                <div class="text-center text-white px-4">
+                    <h1 class="text-5xl font-bold mb-2">Contact Carryvala</h1>
+                    <p class="text-lg leading-tight">Fast Pickup • Delivery On Time </p>
+                </div>
+            </div>
+        </section>
+        <!--==================Contact Details==================-->
+        <section class="max-w-5xl mx-auto px-6 py-14">
+            <div class="bg-white rounded-3xl shadow-lg p-10">
+                <h2 class="text-center text-3xl font-bold text-orange-500 mb-10">
+                    We’d Love To Hear From You!
+                </h2>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <!-- Address -->
+                    <div class="bg-orange-50 p-6 rounded-2xl shadow">
+                        <div class="text-4xl mb-3">📍</div>
+                        <h4 class="font-bold text-lg">Our Location</h4>
+                        <p class="mt-2 text-gray-600">
+                            Near City Center,<br>
+                            Bangalore, Karnataka
+                        </p>
+                    </div>
+                    <!-- Phone -->
+                    <div class="bg-orange-50 p-6 rounded-2xl shadow">
+                        <div class="text-4xl mb-3">📞</div>
+                        <h4 class="font-bold text-lg">Call Us</h4>
+                        <p class="mt-2 text-gray-600">+91 8555866797</p>
+                        <p class="text-sm text-gray-500">9 AM – 9 PM</p>
+                    </div>
+                    <!-- Email -->
+                    <div class="bg-orange-50 p-6 rounded-2xl shadow">
+                        <div class="text-4xl mb-3">📧</div>
+                        <h4 class="font-bold text-lg">Email</h4>
+                        <p class="mt-2 text-gray-600">carryvala@gmail.com</p>
+                    </div>
+                </div>
+                <!-- FOOD GALLERY -->
+                <div class="mt-12">
+                    <h3 class="text-xl font-semibold text-center mb-4 text-orange-500">
+                        Our Food
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=800&auto=format&fit=crop"
+                            class="rounded-xl h-36 w-full object-cover shadow">
+                        <img src="https://dyimg77.exportersindia.com/product_images/bc-full/2025/11/14679222/wow-combo-bottle-lunch-box-set-1764218568-8455307.jpeg"
+                            class="rounded-xl h-36 w-full object-cover shadow">
+                        <img src="https://m.media-amazon.com/images/I/71h+T2yh34L._SL1500_.jpg"
+                            class="rounded-xl h-36 w-full object-cover shadow">
+                        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=800&auto=format&fit=crop"
+                            class="rounded-xl h-36 w-full object-cover shadow">
+                    </div>
+                </div>
+                <!-- INSTAGRAM QR SECTION -->
+                <div class="mt-12 text-center">
+                    <h3 class="text-2xl font-bold text-orange-500 mb-4">
+                        Follow Us On Instagram
+                    </h3>
+                    <!-- CLICKABLE QR -->
+                    <a href="https://instagram.com/carryvala2025" target="_blank">
+                        <img src="Insta.jpg" alt="Carryvala Instagram QR"
+                            class="mx-auto w-48 h-48 rounded-xl shadow-lg hover:scale-105 transition cursor-pointer">
+                    </a>
+                    <p class="mt-4 text-lg font-semibold">
+                        <a href="https://instagram.com/carryvala2025" target="_blank"
+                            class="text-orange-500 hover:underline">
+                            @carryvala2025
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 border-b border-gray-700 pb-8 mb-8">
+                <div>
+                    <h5 class="text-lg font-bold text-carry-red mb-3">Carryvala</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-carry-red">About Us</a></li>
+                        <li><a href="#" class="hover:text-carry-red">Careers</a></li>
+                        <li><a href="#" class="hover:text-carry-red">Blog</a></li>
+                        <li><a href="#" class="hover:text-carry-red">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-bold mb-3">Delivery Zones</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-carry-red">Office Parks</a></li>
+                        <li><a href="#" class="hover:text-carry-red">Universities</a></li>
+                        <li><a href="#" class="hover:text-carry-red">Schools (K-12)</a></li>
+                        <li><a href="#" class="hover:text-carry-red">Zone Map</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-bold mb-3">Support</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-carry-red">FAQ</a></li>
+                        <li><a href="#" class="hover:text-carry-red">Track Order</a></li>
+                        <li><a href="#" class="hover:text-carry-red">Contact Delivery</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2">
+                    <h5 class="text-lg font-bold mb-3">Legal</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-carry-red">Terms & Conditions</a></li>
+                        <li><a href="#" class="hover:text-carry-red">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center text-sm text-gray-500">
+                &copy; 2025 Carryvala. All rights reserved. The Tiffin Logistics Experts.
+            </div>
+        </div>
+    </footer>
+    <!-- WhatsApp Floating Button (New Feature) -->
+    <a href="https://api.whatsapp.com/send?phone=918555866797&text=Hello%20Carryvala%2C%20I%20have%20a%20query%20about%20booking%20a%20tiffin%20delivery."
+        target="_blank"
+        class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-3 rounded-full shadow-2xl hover:bg-green-600 transition duration-300 transform hover:scale-110 flex items-center space-x-2">
+        <!-- WhatsApp Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path
+                d="M12.002 0c-6.627 0-12 5.373-12 12s5.373 12 12 12c1.765 0 3.428-.396 4.935-1.106l4.225 1.106-1.106-4.225c.71-.659 1.106-1.554 1.106-2.483 0-6.627-5.373-12-12-12zm-3.002 17c-.552 0-1-.448-1-1s.448-1 1-1h4c.552 0 1 .448 1 1s-.448 1-1 1h-4zm3-4c-.552 0-1-.448-1-1s.448-1 1-1h4c.552 0 1 .448 1 1s-.448 1-1 1h-4zm-3-4c-.552 0-1-.448-1-1s.448-1 1-1h4c.552 0 1 .448 1 1s-.448 1-1 1h-4z" />
+        </svg>
+        <span class="hidden sm:block text-sm font-semibold">Chat Support</span>
+    </a>
+    <!-- JavaScript for simple interaction -->
+    <script>
+        const searchMessage = document.getElementById('search-message');
+        const deliveryType = document.getElementById('delivery-type');
+        const pickupLocation = document.getElementById('pickup-location');
+        const searchButton = document.getElementById('search-button');
+        // Simple function to simulate a search action
+        function simulateSearch() {
+            const pickup = pickupLocation.value;
+            const dropoffType = deliveryType.value;
+            // Check for required input
+            if (pickup.trim() === '') {
+                searchMessage.textContent = 'Please enter your home pickup address to proceed.';
+                searchMessage.className = 'mt-4 text-sm text-red-600 font-medium min-h-[1.5rem]';
+                searchButton.classList.add('animate-shake'); // Simple visual feedback for error
+                setTimeout(() => searchButton.classList.remove('animate-shake'), 500);
+                return;
+            }
+            // Simulate successful booking
+            searchMessage.textContent = Finding riders for pickup at "${pickup}" to ${ dropoffType }... Please wait.;
+            searchMessage.className = 'mt-4 text-base text-carry-red font-semibold min-h-[1.5rem]';
+            // Simulate loading (e.g., Rider found/redirect)
+            searchButton.disabled = true;
+            searchButton.textContent = 'Searching...';
+            setTimeout(() => {
+                searchMessage.textContent = Success! Rider assigned for your ${ dropoffType } delivery.;
+                searchButton.textContent = 'View Tracking';
+                searchButton.classList.remove('bg-carry-red', 'hover:bg-red-700');
+                searchButton.classList.add('bg-green-500', 'hover:bg-green-600');
+            }, 2500);
+            // Reset after a full cycle
+            setTimeout(() => {
+                searchMessage.textContent = '';
+                pickupLocation.value = '';
+                searchButton.disabled = false;
+                searchButton.textContent = 'Book Delivery';
+                searchButton.classList.remove('bg-green-500', 'hover:bg-green-600');
+                searchButton.classList.add('bg-carry-red', 'hover:bg-red-700');
+            }, 5500);
+        }
+        // Add shake animation utility (pure JS, no Tailwind utility for shake by default)
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                @keyframes shake {
+                    0%, 100% {transform: translateX(0);}
+                    10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
+                    20%, 40%, 60%, 80% {transform: translateX(5px);}
+                }
+                .animate-shake {
+                    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+                    transform: translate3d(0, 0, 0);
+                    backface-visibility: hidden;
+                    perspective: 1000px;
+                }
+            </style>
+        `);
+    </script>
+    <script>
+        const user = JSON.parse(localStorage.getItem("carryvalaUser"));
+        if (user && user.loggedIn) {
+            document.getElementById("userWelcome").innerText =
+                "Welcome, " + user.name;
+            document.getElementById("loginBtn").style.display = "none";
+            document.getElementById("logoutBtn").style.display = "inline-block";
+        }
+        function logout() {
+            localStorage.removeItem("carryvalaUser");
+            location.reload();
+        }
+    </script>
+    <!-- ====================== RIDER MODAL ====================== -->
+    <div id="riderModal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center">
+        <div class="bg-white w-full max-w-md rounded-xl p-8 relative shadow-2xl">
+            <!-- Close Button -->
+            <button onclick="closeRiderModal()" class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl">
+                ✖
+            </button>
+            <h2 class="text-3xl font-bold text-center text-red-600 mb-6">
+                Become a Rider
+            </h2>
+            <form onsubmit="submitRider(event)" class="space-y-4">
+                <input type="text" id="riderName" placeholder="Full Name" required
+                    class="w-full p-3 border rounded-lg focus:outline-red-500">
+                <input type="tel" id="riderPhone" placeholder="Mobile Number" maxlength="10" inputmode="numeric"
+                    pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required
+                    class="w-full p-3 border rounded-lg focus:outline-red-500">
+                <input type="text" id="riderArea" placeholder="Delivery Area / Location" required
+                    class="w-full p-3 border rounded-lg focus:outline-red-500">
+                <select id="vehicleType" required class="w-full p-3 border rounded-lg focus:outline-red-500">
+                    <option value="">Select Vehicle Type</option>
+                    <option>Bike</option>
+                    <option>Scooter</option>
+                    <option>Bicycle</option>
+                </select>
+                <button class="w-full bg-red-600 text-white p-3 rounded-lg font-bold hover:bg-red-700 transition">
+                    Submit Application
+                </button>
+            </form>
+            <!-- Success message -->
+            <p id="riderMsg" class="text-center text-green-600 font-semibold mt-4"></p>
+        </div>
+    </div>
+    <script>
+        // Open the modal
+        function openRiderModal() {
+            document.getElementById("riderModal").classList.remove("hidden");
+        }
+        // Close the modal
+        function closeRiderModal() {
+            document.getElementById("riderModal").classList.add("hidden");
+        }
+        // Handle Rider form submission
+        function submitRider(event) {
+            event.preventDefault();
+            const name = document.getElementById("riderName").value;
+            const phone = document.getElementById("riderPhone").value;
+            const area = document.getElementById("riderArea").value;
+            const vehicle = document.getElementById("vehicleType").value;
+            console.log("Rider Details:", { name, phone, area, vehicle });
+            document.getElementById("riderMsg").innerText =
+                "✅ Application submitted successfully! We'll contact you shortly.";
+            event.target.reset();
+            // Auto-close modal after 2 seconds
+            setTimeout(closeRiderModal, 2000);
+        }
+    </script>
+    <script>
+        function showPage(pageId) {
+            document.getElementById("homePage").classList.add("hidden");
+            document.getElementById("trackingPage").classList.add("hidden");
+
+            document.getElementById(pageId).classList.remove("hidden");
+        }
+    </script>
+    <script>
+        function trackOrder() {
+            const id = document.getElementById("trackId").value;
+            const result = document.getElementById("trackResult");
+            if (id.trim() === "") {
+                result.textContent = "❗ Please enter Tracking ID";
+                result.style.color = "red";
+                return;
+            }
+            result.textContent = `✅ Your order ${id} is Out For Delivery`;
+            result.style.color = "green";
+        }
+    </script>
+    <!---- track script-->
+    <script>
+        function trackOrder() {
+            const input = document.getElementById("trackId").value.trim();
+            if (!input) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Enter Tracking Details',
+                    text: 'Please enter your mobile number'
+                });
+                return;
+            }
+            const resultBox = document.getElementById("resultBox");
+            const stepIcons = resultBox.querySelectorAll(".step-icon");
+            const stepTexts = resultBox.querySelectorAll(".step-text");
+            const progressBar = document.getElementById("progressBar");
+            const deliveryMessage = document.getElementById("deliveryMessage");
+            // Show the result box
+            resultBox.classList.remove("hidden");
+            // Reset steps
+            stepIcons.forEach(icon => icon.classList.remove("completed"));
+            stepTexts.forEach(text => text.classList.remove("active"));
+            progressBar.style.width = '0';
+            deliveryMessage.textContent = '';
+            // Simulate tracking updates
+            let status = 0;
+            const totalSteps = stepIcons.length;
+            const interval = setInterval(() => {
+                if (status >= totalSteps) {
+                    clearInterval(interval);
+                    deliveryMessage.textContent = "✅ Delivered Successfully! Your tiffin has reached safely.";
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Delivered Successfully! 🎉',
+                        text: 'Thank you for using Carryvala ❤️'
+                    });
+                    return;
+                }
+                // Update step icon and text
+                stepIcons[status].classList.add("completed");
+                stepTexts[status].classList.add("active");
+                // Update progress bar
+                progressBar.style.width = `${((status + 1) / totalSteps) * 100}%`;
+                status++;
+            }, 800); // Change speed as needed
+        }
+    </script>
+    <script>
+        function showPage(pageId) {
+            const pages = [
+                "homePage",
+                "trackingPage",
+                "aboutPage",
+                "contactPage"
+            ];
+            pages.forEach(p => {
+                const el = document.getElementById(p);
+                if (el) el.classList.add("hidden");
+            });
+            const active = document.getElementById(pageId);
+            if (active) active.classList.remove("hidden");
+            // Scroll to top when switching pages
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    </script>
+    <script>
+        const mobileBtn = document.getElementById("mobileMenuBtn");
+        const navMenu = document.getElementById("navMenu");
+        mobileBtn.addEventListener("click", () => {
+            navMenu.classList.toggle("hidden");
+        });
+    </script>
+    <!-- login script-->
+    <script>
+        function showPage(pageId) {
+            // List all your page containers
+            const pages = ["homePage", "trackingPage", "aboutPage", "contactPage", "loginPage", "register"];
+
+            // Hide all pages
+            pages.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add("hidden");
+            });
+
+            // Show the requested page
+            const target = document.getElementById(pageId);
+            if (target) target.classList.remove("hidden");
+        }
+    </script>
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll(
+                '#homePage, #trackingPage, #loginPage, #schedulePage, #aboutPage, #contactPage, #shippingPage, #registerPage'
+            ).forEach(page => page.classList.add('hidden'));
+
+            // Show requested page
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+    </script>
+    <script>
+        function trackOrder() {
+            const mobile = document.getElementById("trackId").value;
+            const resultBox = document.getElementById("resultBox");
+            const progressBar = document.getElementById("progressBar");
+
+            if (mobile.length !== 10) {
+                alert("Please enter a valid 10-digit mobile number");
+                return;
+            }
+            resultBox.classList.remove("hidden");
+            // Animate progress
+            progressBar.style.width = "50%"; // Pickup confirmed
+            setTimeout(() => progressBar.style.width = "100%", 2000); // Delivered
+        }
+        function trackOrder() {
+            const mobile = document.getElementById("trackId").value;
+            const resultBox = document.getElementById("resultBox");
+            const progressBar = document.getElementById("progressBar");
+            if (mobile.length !== 10) {
+                alert("Please enter a valid 10-digit mobile number");
+                return;
+            }
+            resultBox.classList.remove("hidden");
+            // Animate progress
+            progressBar.style.width = "50%"; // Pickup confirmed
+            setTimeout(() => progressBar.style.width = "100%", 2000);
+            // Save timeout ID so we can cancel it if needed
+            const deliveryTimeout = setTimeout(() => {
+                Swal.fire({
+                    title: "🎉 Parcel Delivered Successfully",
+                    text: "Thank you for using Carryvala. Would you like to schedule another pickup?",
+                    icon: "success",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, Book Again",
+                    cancelButtonText: "No, Go Home",
+                    confirmButtonColor: "#dc2626", // carry-red
+                    cancelButtonColor: "#6b7280"   // gray
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // ✅ Go directly to booking page
+                        showPage("schedulePage")
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        // ✅ Cancel timeout and go home
+                        clearTimeout(deliveryTimeout);
+                        showPage("homePage");
+                    }
+                });
+            }, 2500);
+        }
+    </script>
+    <!--------Schedule---------->
+    <script>
+        function showPickupSuccess() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Pickup Scheduled Successfully!',
+                html: `
+      <b>Your lunch box pickup has been confirmed.</b><br><br>
+      🕐 Pickup on <b>${document.getElementById("date").value}</b>
+      at <b>${document.getElementById("timeSelect").value}</b><br>
+      📦 Delivery: <b>${document.getElementById("delivery").value}</b><br>
+      💰 Amount Paid: <b>₹${document.getElementById("total").innerText}</b><br><br>
+      Thank you for choosing <b>CarryVala</b> ❤️
+    `,
+                confirmButtonText: 'Go Home'
+            }).then(() => {
+                window.location.href = "index.html";
+            });
+        }
+        const form = document.getElementById('scheduleForm');
+        const mobile = document.getElementById('mobile');
+        const pincode = document.getElementById('pincode');
+        const weightSelect = document.getElementById('weightSelect');
+        const baseFareEl = document.getElementById('baseFare');
+        const gstEl = document.getElementById('gst');
+        const totalEl = document.getElementById('total');
+        const submitBtn = document.getElementById('submitBtn');
+        const officePhone = document.getElementById('officePhone');
+        const phoneDiv = document.getElementById('phoneDiv');
+        const deliveryInput = document.getElementById('delivery');
+        const qrModal = document.getElementById('qrModal');
+        const qrContent = document.getElementById('qrContent');
+        const paidBtn = document.getElementById('paidBtn');
+        const cancelQr = document.getElementById('cancelQr');
+        let selectedPayment = null;
+        // Numbers only in phone & pincode
+        mobile.addEventListener('input', () => mobile.value = mobile.value.replace(/[^0-9]/g, ''));
+        pincode.addEventListener('input', () => pincode.value = pincode.value.replace(/[^0-9]/g, ''));
+        officePhone.addEventListener('input', () => officePhone.value = officePhone.value.replace(/[^0-9]/g, ''));
+        // ✅ Price calculation
+        weightSelect.addEventListener('change', () => {
+            const val = parseInt(weightSelect.value) || 0;
+            baseFareEl.innerText = val;
+            const gst = Math.round(val * 0.05);
+            gstEl.innerText = gst;
+            totalEl.innerText = val + gst;
+            submitBtn.disabled = val === 0;
+        });
+        // ✅ Payment selection highlight
+        document.querySelectorAll('.payOption').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.payOption')
+                    .forEach(b => b.classList.remove('selectedPay'));
+                btn.classList.add('selectedPay');
+                selectedPayment = btn.dataset.pay;
+            });
+        });
+        // ✅ Modal helpers
+        function showModal(modal, content) {
+            modal.classList.remove('hidden');
+            content.classList.remove('scale-90', 'opacity-0');
+            content.classList.add('modal-animate');
+        }
+        function hideModal(modal, content) {
+            content.classList.remove('modal-animate');
+            content.classList.add('scale-90', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+        // ✅ Form Submit
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            if (!selectedPayment) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Select Payment Method',
+                    text: 'Please choose UPI or Cash on Delivery to continue'
+                });
+                return;
+            }
+            // COD
+            if (selectedPayment === 'cod') {
+                showPickupSuccess();
+            }
+            // UPI
+            else {
+                showModal(qrModal, qrContent);
+            }
+        });
+        // ✅ UPI paid
+        paidBtn.addEventListener('click', () => {
+            hideModal(qrModal, qrContent);
+            showPickupSuccess();
+        });
+        // ✅ QR cancel
+        cancelQr.addEventListener('click', () => {
+            hideModal(qrModal, qrContent);
+        });
+        // ✅ Dynamic phone rule
+        deliveryInput.addEventListener('input', () => {
+            const val = deliveryInput.value.toLowerCase();
+            if (val.includes('school')) {
+                phoneDiv.style.display = 'none';
+                officePhone.required = false;
+            }
+            else if (val.includes('office')) {
+                phoneDiv.style.display = 'block';
+                officePhone.required = false;
+            }
+            else {
+                phoneDiv.style.display = 'block';
+                officePhone.required = true;
+            }
+        });
+    </script>
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('#homePage, #trackingPage, #loginPage, #schedulePage, #aboutPage, #contactPage, #shippingPage')
+                .forEach(page => page.classList.add('hidden'));
+            // Show requested page
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+    </script>
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('#homePage, #trackingPage, #loginPage, #schedulePage, #aboutPage, #contactPage, #shippingPage')
+                .forEach(page => page.classList.add('hidden'));
+            // Show requested page
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+    </script>
+    <!---------Register Script------------>
+    <script>
+        const registerForm = document.getElementById("registerForm");
+        const registerBtn = document.getElementById("registerBtn");
+        const registerError = document.getElementById("registerError");
+        registerForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const confirmPassword = document.getElementById("confirmPassword").value.trim();
+            registerError.classList.add("hidden");
+            // Validation
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                registerError.innerText = "Please fill all fields";
+                registerError.classList.remove("hidden");
+                return;
+            }
+            if (!email.includes("@")) {
+                registerError.innerText = "Enter a valid email";
+                registerError.classList.remove("hidden");
+                return;
+            }
+            if (!/^\d+$/.test(phone)) {
+                registerError.innerText = "Phone number must contain only digits";
+                registerError.classList.remove("hidden");
+                return;
+            }
+            if (password.length < 6) {
+                registerError.innerText = "Password must be at least 6 characters";
+                registerError.classList.remove("hidden");
+                return;
+            }
+            if (password !== confirmPassword) {
+                registerError.innerText = "Passwords do not match";
+                registerError.classList.remove("hidden");
+                return;
+            }
+            registerBtn.innerText = "Registering...";
+            registerBtn.disabled = true;
+            setTimeout(() => {
+                // Store user in localStorage for demo
+                const users = JSON.parse(localStorage.getItem("users") || "[]");
+                users.push({ name, email, phone, password });
+                localStorage.setItem("users", JSON.stringify(users));
+                // Success popup
+                const popup = document.createElement("div");
+                popup.className = "fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg z-50 animate-fadeIn";
+                popup.innerText = "✅ Registration successful! Redirecting to home...";
+                document.body.appendChild(popup);
+                setTimeout(() => {
+                    document.body.removeChild(popup);
+                    showPage('homePage'); // redirect to home page
+                }, 2000);
+            }, 1000);
+        });
+    </script>
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll(
+                '#homePage, #trackingPage, #loginPage, #schedulePage, #aboutPage, #contactPage, #shippingPage, #registerPage'
+            ).forEach(page => page.classList.add('hidden'));
+
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+    </script>
+<!--------Qr -------------->
+    <script>
+        const payOptions = document.querySelectorAll(".payOption");
+        const submitBtn = document.getElementById("submitBtn");
+        let selectedPay = null;
+
+        // Enable submit when a payment option is chosen
+        payOptions.forEach(btn => {
+            btn.addEventListener("click", () => {
+                selectedPay = btn.dataset.pay;
+                submitBtn.disabled = false;
+
+                // highlight selected option
+                payOptions.forEach(b => b.classList.remove("ring-2", "ring-red-500"));
+                btn.classList.add("ring-2", "ring-red-500");
+            });
+        });
+
+        // Handle form submit
+        document.getElementById("scheduleForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            if (selectedPay === "upi") {
+                // show QR modal
+                document.getElementById("qrModal").classList.remove("hidden");
+                document.getElementById("qrContent").classList.add("scale-100", "opacity-100");
+            } else if (selectedPay === "cod") {
+                // show success modal directly
+                document.getElementById("successModal").classList.remove("hidden");
+                document.getElementById("successContent").classList.add("scale-100", "opacity-100");
+
+                // auto redirect after 3s
+                setTimeout(() => showPage("homePage"), 3000);
+            }
+        });
+
+        // QR modal buttons
+        document.getElementById("paidBtn").addEventListener("click", () => {
+            document.getElementById("qrModal").classList.add("hidden");
+            document.getElementById("successModal").classList.remove("hidden");
+            document.getElementById("successContent").classList.add("scale-100", "opacity-100");
+
+            setTimeout(() => showPage("homePage"), 3000);
+        });
+
+        document.getElementById("cancelQr").addEventListener("click", () => {
+            document.getElementById("qrModal").classList.add("hidden");
+        });
+    </script>
+    <script>
+  const payOptions = document.querySelectorAll(".payOption");
+  const submitBtn = document.getElementById("submitBtn");
+  let selectedPay = null;
+
+  payOptions.forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedPay = btn.dataset.pay;
+      submitBtn.disabled = false;
+
+      // Reset styles
+      payOptions.forEach(b => b.classList.remove("bg-red-600", "text-white"));
+      // Highlight selected
+      btn.classList.add("bg-red-600", "text-white");
+    });
+  });
+</script>
+<script>
+  document.getElementById("scheduleForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    if (selectedPay === "upi") {
+      document.getElementById("qrModal").classList.remove("hidden");
+      document.getElementById("qrContent").classList.add("scale-100", "opacity-100");
+    } else if (selectedPay === "cod") {
+      // Show success modal directly
+      document.getElementById("successModal").classList.remove("hidden");
+      document.getElementById("successContent").classList.add("scale-100", "opacity-100");
+
+      // Redirect after 3s
+      setTimeout(() => showPage("homePage"), 3000);
+    } else {
+      alert("Please select a payment method first.");
+    }
+  });
+</script>
+<script>
+  document.getElementById("paidBtn").addEventListener("click", () => {
+    document.getElementById("qrModal").classList.add("hidden");
+    document.getElementById("successModal").classList.remove("hidden");
+    document.getElementById("successContent").classList.add("scale-100", "opacity-100");
+
+    // Update message text
+    document.querySelector("#successContent h4").textContent = "Thanks! Your pickup has been scheduled.";
+    document.querySelector("#successContent p").textContent = "Our delivery partner has been notified and will arrive at the scheduled time.";
+
+    setTimeout(() => showPage("homePage"), 3000);
+  });
+
+  document.getElementById("cancelQr").addEventListener("click", () => {
+    document.getElementById("qrModal").classList.add("hidden");
+  });
+</script>
+
+<!--nav bar to phone connect-->
+<script>
+  const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+  const navMenu = document.getElementById("navMenu");
+
+  mobileMenuBtn.addEventListener("click", () => {
+    navMenu.classList.toggle("hidden");
+  });
+</script>
+<script>
+  const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+  const navMenu = document.getElementById("navMenu");
+  mobileMenuBtn.addEventListener("click", () => {
+    navMenu.classList.toggle("hidden");
+  });
+</script>
+
+
+
+    
+
+    <style>
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px)
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+    <footer class="bg-white shadow-inner py-6 text-center text-gray-600">
+        © 2025 Carryvala. All rights reserved.
+    </footer>
+</body>
+
+</html>
