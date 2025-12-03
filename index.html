@@ -128,84 +128,81 @@
 <body class="font-sans bg-carry-light text-carry-dark">
     <!-- Navigation Bar -->
     <header class="fixed top-0 left-0 w-full z-50 bg-white shadow-lg">
-        <button id="mobileMenuBtn" class="md:hidden text-carry-dark p-2">
-            ☰
-        </button>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-18">
-                <!-- Logo -->
-                <div class="flex items-center py-2 space-x-2">
-                    <!-- Logo Image -->
-                    <img src="Logo.jpg" alt="Carryvala Logo" class="w-18 h-16 object-contain">
-                    <!-- Logo Text -->
-                    <span class="text-3xl font-extrabold text-carry-red">
-                        C<span class="text-carry-dark">arryvala</span>
-                    </span>
-                </div>
-                <!-- Navigation Links (Hidden on small screens) -->
-                <nav id="navMenu"
-                    class="hidden md:flex md:space-x-8 flex-col md:flex-row absolute md:static top-full left-0 w-full md:w-auto bg-white md:bg-transparent p-4 md:p-0 text-sm font-semibold shadow md:shadow-none z-50">
-                    <a href="#" class="hover:text-carry-red" onclick="showPage('homePage')">Home</a>
-                    <a href="#" class="hover:text-carry-red" onclick="showPage('trackingPage')">Tracking</a>
-                    <a href="#" class="hover:text-carry-red" onclick="showPage('shippingPage')">Shipping</a>
-                    <a href="#" class="hover:text-carry-red" onclick="showPage('aboutPage')">About Us</a>
-                    <a href="#" class="hover:text-carry-red" onclick="showPage('contactPage')">Contact Us</a>
-                </nav>
-                <!-- Auth/Cart Icons -->
-                <div class="flex items-center space-x-4">
-                    <!-- User Icon (Login) -->
-                    <a href="#" onclick="showPage('loginPage')"
-                        class="text-carry-dark hover:text-carry-red transition duration-150 p-2 rounded-full hover:bg-carry-red/10">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z">
-                            </path>
-                        </svg>
-                    </a>
-                    <!-- Register Button -->
-                    <a href="#" onclick="showPage('registerPage')"
-                        class="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-pink-700 transition duration-150 flex items-center space-x-2 shadow-md">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-                        </svg>
-                        <span id="cart-count">Register</span>
-                    </a>
-                </div>
-            </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      
+      <!-- Logo + Brand -->
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full overflow-hidden">
+          <img src="Logo.jpg" alt="Carryvala Logo" class="w-full h-full object-cover" />
         </div>
-    </header>
+        <span class="text-2xl sm:text-3xl font-extrabold whitespace-nowrap">
+          <span class="text-carry-red">C</span><span class="text-carry-dark">arryvala</span>
+        </span>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuBtn" class="md:hidden text-carry-dark p-2">
+        ☰
+      </button>
+
+      <!-- Navigation Links -->
+      <nav id="navMenu"
+        class="hidden flex flex-col space-y-4 md:flex md:flex-row md:space-x-8 absolute md:static top-full left-0 w-full md:w-auto bg-white border-t border-gray-200 p-4 md:p-0 text-sm font-semibold shadow md:shadow-none z-50">
+        <a href="#" class="hover:text-carry-red transition" onclick="showPage('homePage')">Home</a>
+        <a href="#" class="hover:text-carry-red transition" onclick="showPage('trackingPage')">Tracking</a>
+        <a href="#" class="hover:text-carry-red transition" onclick="showPage('shippingPage')">Shipping</a>
+        <a href="#" class="hover:text-carry-red transition" onclick="showPage('aboutPage')">About Us</a>
+        <a href="#" class="hover:text-carry-red transition" onclick="showPage('contactPage')">Contact Us</a>
+      </nav>
+
+      <!-- Auth Buttons -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- Login Icon -->
+        <a href="#" onclick="showPage('loginPage')"
+           class="flex items-center justify-center w-10 h-10 rounded-full text-carry-dark hover:text-carry-red hover:bg-carry-red/10 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+               xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z">
+            </path>
+          </svg>
+        </a>
+
+        <!-- Register Button -->
+        <a href="#" onclick="showPage('registerPage')"
+           class="bg-carry-red text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition shadow-md whitespace-nowrap">
+          Register
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
     <!-- Main Content Area -->
     <div id="homePage">
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12">
             <!-- Hero Section - Focus on Logistics -->
             <section
                 class="text-center py-16 bg-white rounded-xl shadow-2xl shadow-carry-purple/20 mb-16 border-b-4 border-red-600">
-                <h1 class="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-carry-dark mb-4">
-                    <span class="text-red-600">Carryvala: Your Tiffin,</span><br>
-                    Delivered On-Time, Every Time.
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-carry-dark mb-4 leading-tight">
+                    <span class="text-carry-red">Carryvala</span>: Reliable Tiffin Delivery
+                </h1>
+
+                <span class="text-red-600">Carryvala: Your Tiffin,</span><br>
+                Delivered On-Time, Every Time.
                 </h1>
                 <div class="max-w-3xl mx-auto mb-8">
-                    <p class="text-gray-700 text-base sm:text-lg leading-relaxed tracking-wide">
-                        <span class="font-semibold text-carry-dark">
-                            Reliable pickup
-                        </span> from your home kitchen and
-                        <span class="font-semibold text-carry-dark">
-                            secure, guaranteed delivery
-                        </span>
-                        to schools, colleges, and office locations —
-                        <span class="text-carry-red font-semibold">
-                            always before your lunch break begins.
-                        </span>
+                    <p class="text-gray-700 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+                        We pick up fresh meals from your home and deliver them safely to schools, colleges, and offices
+                        —
+                        <span class="font-semibold text-carry-red">always before lunch begins.</span>
                     </p>
+
                 </div>
                 <!-- Location Search Bar - Focused on P&D -->
-                <div class="bg-white p-3 rounded-full shadow-xl max-w-4xl mx-auto flex flex-col md:flex-row gap-4">
-
+                <div
+                    class="bg-white p-4 sm:p-6 rounded-xl shadow-xl w-full max-w-md sm:max-w-xl lg:max-w-4xl mx-auto flex flex-col gap-4">
                     <div class="flex-1 flex bg-gray-100 rounded-full p-2 items-center">
                         <!-- Pickup Location -->
                         <div class="flex items-center space-x-2 px-3 border-r border-gray-300 w-1/2">
@@ -239,9 +236,10 @@
                     <!-- Search Button -->
                     <a href="#" onclick="showPage('schedulePage')">
                         <button
-                            class="w-full md:w-auto bg-carry-red text-white font-bold py-3 px-8 rounded-full shadow-custom hover:bg-red-700 transition duration-300 transform hover:scale-105 active:scale-95">
+                            class="w-full sm:w-auto px-6 py-3 bg-carry-red text-white font-bold rounded-full shadow-custom hover:bg-red-700 transition duration-300 transform hover:scale-105 active:scale-95 text-sm sm:text-base">
                             Book Delivery
                         </button>
+
                     </a>
                 </div>
                 <p id="search-message" class="mt-4 text-base text-gray-600 min-h-[1.5rem]"></p>
@@ -433,7 +431,7 @@
     <!--===================Schedule Page=============================-->
     <div id="schedulePage" class="hidden pt-28 pb-12 flex items-center justify-center">
         <div class="glass rounded-xl shadow-xl w-full max-w-md sm:max-w-lg lg:max-w-2xl mx-auto overflow-hidden">
-            <<section class="p-4 sm:p-6 lg:p-10">
+            <section class="p-4 sm:p-6 lg:p-10">
                 <header class="mb-6 text-center">
                     <h1 class="text-2xl lg:text-3xl font-extrabold text-red-600">Schedule Pickup & Delivery</h1>
                     <p class="text-sm text-gray-600 mt-1">Provide detailed pickup address and contact so our driver
@@ -446,7 +444,7 @@
                     <div>
                         <label class="text-sm font-semibold text-gray-700">Sender name</label>
                         <input id="name" type="text" required placeholder="Full name"
-                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                     </div>
                     <!-- Mobile -->
                     <div>
@@ -467,18 +465,18 @@
                     </div>
                     <div>
                         <label class="text-sm font-semibold text-gray-700">Building / Street</label>
-                        <input id="street" type="text" required placeholder="Building name, street"
+                        <input id="Pickup street" type="text" required placeholder="Building name, street"
                             class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="text-sm font-semibold text-gray-700">City</label>
-                            <input id="city" type="text" required placeholder="Bangalore"
-                               class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
+                            <input id="Pickup city" type="text" required placeholder="Bangalore"
+                                class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                         </div>
                         <div>
                             <label class="text-sm font-semibold text-gray-700">Pincode</label>
-                            <input id="pincode" type="text" inputmode="numeric" maxlength="6" required
+                            <input id="Pickup pincode" type="text" inputmode="numeric" maxlength="6" required
                                 placeholder="500001"
                                 class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                         </div>
@@ -486,25 +484,25 @@
                     <div>
                         <label class="text-sm font-semibold text-gray-700">Landmark (optional)</label>
                         <input id="landmark" type="text" placeholder="Near Paradise Circle"
-                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                     </div>
 
                     <!-- Delivery -->
                     <h6 class="text-xl lg:text-xl font-bold text-red-600">Enter your Delivery Information</h6>
                     <div>
                         <label class="text-sm font-semibold text-gray-700">Building / Street</label>
-                        <input id="street" type="text" required placeholder="Building name, street"
-                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                        <input id=" Drop street" type="text" required placeholder="Building name, street"
+                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="text-sm font-semibold text-gray-700">City</label>
-                            <input id="city" type="text" required placeholder="Bangalore"
-                                class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                            <input id="Drop city" type="text" required placeholder="Bangalore"
+                                class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                         </div>
                         <div>
                             <label class="text-sm font-semibold text-gray-700">Pincode</label>
-                            <input id="pincode" type="text" inputmode="numeric" maxlength="6" required
+                            <input id="Drop pincode" type="text" inputmode="numeric" maxlength="6" required
                                 placeholder="500001"
                                 class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                         </div>
@@ -515,25 +513,26 @@
                             <div>
                                 <label class="text-sm font-semibold text-gray-700">Pickup date</label>
                                 <input id="date" type="date" required
-                                    class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                                    class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                             </div>
                             <div>
                                 <label class="text-sm font-semibold text-gray-700">Pickup time</label>
-                                <select id="timeSelect" required class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
-                                    <option value="">Select pickup time</option>
-                                    <option>07:30 AM</option>
-                                    <option>08:00 AM</option>
-                                    <option>08:30 AM</option>
-                                    <option>09:00 AM</option>
-                                    <option>09:30 AM</option>
-                                    <option>10:00 AM</option>
-                                    <option>11:00 AM</option>
-                                    <option>12:00 PM</option>
-                                    <option>01:00 PM</option>
-                                    <option>02:00 PM</option>
-                                    <option>03:00 PM</option>
-                                    <option>05:00 PM</option>
-                                    <option>06:00 PM</option>
+                                <select id="timeSelect" required
+                                    class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
+                                <option value="">Select pickup time</option>
+                                <option>07:30 AM</option>
+                                <option>08:00 AM</option>
+                                <option>08:30 AM</option>
+                                <option>09:00 AM</option>
+                                <option>09:30 AM</option>
+                                <option>10:00 AM</option>
+                                <option>11:00 AM</option>
+                                <option>12:00 PM</option>
+                                <option>01:00 PM</option>
+                                <option>02:00 PM</option>
+                                <option>03:00 PM</option>
+                                <option>05:00 PM</option>
+                                <option>06:00 PM</option>
                                 </select>
                             </div>
                         </div>
@@ -542,13 +541,13 @@
                         <div>
                             <label class="text-sm font-semibold text-gray-700">Delivery Person Name</label>
                             <input id="delPerson" type="text" required placeholder="Driver Name"
-                               class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                                class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                         </div>
                         <!-- Phone field logic -->
                         <div id="phoneDiv">
                             <label class="text-sm font-semibold text-gray-700">Phone Number</label>
                             <input id="officePhone" type="text" maxlength="10" inputmode="numeric"
-                               class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none"/>
+                                class="mt-1 w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-red-500 focus:outline-none" />
                         </div>
                         <!-- Weight -->
                         <div>
@@ -649,7 +648,7 @@
 
             <!-- IMAGE -->
             <div class="hidden md:flex items-center justify-center bg-white p-10">
-                <img src="Logo.jpg" class="w-[420px] drop-shadow-xl">
+                <img src="Logo.jpg" class="w-[420px]">
             </div>
 
             <!-- LOGIN CARD -->
@@ -658,8 +657,9 @@
                 <div class="w-full max-w-sm text-center">
 
                     <!-- AVATAR -->
-                    <div class="mx-auto mb-5 w-16 h-16 rounded-full bg-blue-500
-                            flex items-center justify-center shadow-lg">
+                    <div class="mx-auto mb-5 w-16 h-16 rounded-full flex items-center justify-center shadow-lg">
+                        <img src="Logo.jpg" alt="Carryvala Logo" class="w-16 h-16 rounded-full object-cover" />
+
                         <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-width="2" d="M12 12a4 4 0 100-8 4 4 0 000 8z
                                  M4 20a8 8 0 0116 0" />
@@ -1508,7 +1508,7 @@
             document.getElementById(pageId).classList.remove('hidden');
         }
     </script>
-<!--------Qr -------------->
+    <!--------Qr -------------->
     <script>
         const payOptions = document.querySelectorAll(".payOption");
         const submitBtn = document.getElementById("submitBtn");
@@ -1558,69 +1558,42 @@
         });
     </script>
     <script>
-  const payOptions = document.querySelectorAll(".payOption");
-  const submitBtn = document.getElementById("submitBtn");
-  let selectedPay = null;
+        const payOptions = document.querySelectorAll(".payOption");
+        const submitBtn = document.getElementById("submitBtn");
+        let selectedPay = null;
 
-  payOptions.forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedPay = btn.dataset.pay;
-      submitBtn.disabled = false;
+        payOptions.forEach(btn => {
+            btn.addEventListener("click", () => {
+                selectedPay = btn.dataset.pay;
+                submitBtn.disabled = false;
 
-      // Reset styles
-      payOptions.forEach(b => b.classList.remove("bg-red-600", "text-white"));
-      // Highlight selected
-      btn.classList.add("bg-red-600", "text-white");
-    });
-  });
-</script>
-<script>
-  document.getElementById("scheduleForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+                // Reset styles
+                payOptions.forEach(b => b.classList.remove("bg-red-600", "text-white"));
+                // Highlight selected
+                btn.classList.add("bg-red-600", "text-white");
+            });
+        });
+    </script>
+    <script>
+        document.getElementById("scheduleForm").addEventListener("submit", function (e) {
+            e.preventDefault();
 
-    if (selectedPay === "upi") {
-      document.getElementById("qrModal").classList.remove("hidden");
-      document.getElementById("qrContent").classList.add("scale-100", "opacity-100");
-    } else if (selectedPay === "cod") {
-      // Show success modal directly
-      document.getElementById("successModal").classList.remove("hidden");
-      document.getElementById("successContent").classList.add("scale-100", "opacity-100");
+            if (selectedPay === "upi") {
+                document.getElementById("qrModal").classList.remove("hidden");
+                document.getElementById("qrContent").classList.add("scale-100", "opacity-100");
+            } else if (selectedPay === "cod") {
+                // Show success modal directly
+                document.getElementById("successModal").classList.remove("hidden");
+                document.getElementById("successContent").classList.add("scale-100", "opacity-100");
 
-      // Redirect after 3s
-      setTimeout(() => showPage("homePage"), 3000);
-    } else {
-      alert("Please select a payment method first.");
-    }
-  });
-</script>
-<script>
-  document.getElementById("paidBtn").addEventListener("click", () => {
-    document.getElementById("qrModal").classList.add("hidden");
-    document.getElementById("successModal").classList.remove("hidden");
-    document.getElementById("successContent").classList.add("scale-100", "opacity-100");
-
-    // Update message text
-    document.querySelector("#successContent h4").textContent = "Thanks! Your pickup has been scheduled.";
-    document.querySelector("#successContent p").textContent = "Our delivery partner has been notified and will arrive at the scheduled time.";
-
-    setTimeout(() => showPage("homePage"), 3000);
-  });
-
-  document.getElementById("cancelQr").addEventListener("click", () => {
-    document.getElementById("qrModal").classList.add("hidden");
-  });
-</script>
-
-<!--nav bar to phone connect-->
-<script>
-  const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-  const navMenu = document.getElementById("navMenu");
-
-  mobileMenuBtn.addEventListener("click", () => {
-    navMenu.classList.toggle("hidden");
-  });
-</script>
-<script>
+                // Redirect after 3s
+                setTimeout(() => showPage("homePage"), 3000);
+            } else {
+                alert("Please select a payment method first.");
+            }
+        });
+    </script>
+    <script>
   const mobileMenuBtn = document.getElementById("mobileMenuBtn");
   const navMenu = document.getElementById("navMenu");
   mobileMenuBtn.addEventListener("click", () => {
@@ -1628,10 +1601,26 @@
   });
 </script>
 
+    <script>
+        document.getElementById("paidBtn").addEventListener("click", () => {
+            document.getElementById("qrModal").classList.add("hidden");
+            document.getElementById("successModal").classList.remove("hidden");
+            document.getElementById("successContent").classList.add("scale-100", "opacity-100");
 
+            // Update message text
+            document.querySelector("#successContent h4").textContent = "Thanks! Your pickup has been scheduled.";
+            document.querySelector("#successContent p").textContent = "Our delivery partner has been notified and will arrive at the scheduled time.";
 
+            setTimeout(() => showPage("homePage"), 3000);
+        });
+
+        document.getElementById("cancelQr").addEventListener("click", () => {
+            document.getElementById("qrModal").classList.add("hidden");
+        });
+    </script>
+
+    <!--nav bar to phone connect-->
     
-
     <style>
         @keyframes fadeIn {
             0% {
